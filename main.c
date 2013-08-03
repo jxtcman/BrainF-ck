@@ -97,7 +97,7 @@ int main(void) {
         // Fill up with 0's, as in spec
         data[i] = (unsigned char) 0;
 
-    printf("Please enter code now, ending in an G unsigned character:\n");
+    printf("Please enter code now, ending in the letter G (all other letters apart from syntax will be ignored):\n");
 
     // Get unsigned characters
     unsigned char next;
@@ -109,7 +109,7 @@ int main(void) {
     }
 
     iPointer = instructions;
-    printf("Chunderific instructions: %s", iPointer);
+    //printf("Chunderific instructions: %s", iPointer); // For debug
 
     process();
     exit(0);
