@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <time.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -14,6 +13,7 @@ unsigned char * iPointer; // Points to instructions
 
 void process(void);
 bool amIBothered(unsigned char);
+void print100(void); // Prints first 100 chars in array
 
 bool amIBothered (unsigned char dave) {
     // Is the given unsigned character in the set of synt
@@ -24,12 +24,19 @@ bool amIBothered (unsigned char dave) {
     return false; // I ain't even bothered tho
 }
 
+void print100(void) {
+    for (int i = 0; i < 100; i++) {
+        printf("%d.", (int) data[i]);
+    }
+    printf("\n");
+}
+
 void process() {
     // Actyually processes the bf code
     unsigned char dave;
-    do {
-        dave = *iPointer;
-        printf("Next instruction:%c\n", dave);
+    dave = *iPointer;
+    while (amIBothered(dave)) {
+        //printf("Next instruction:%c, Data: %c\n", dave, *dataPointer); // Debug
 
         switch (dave) {
             case '>':
@@ -41,7 +48,8 @@ void process() {
             case '-':
                 -- *dataPointer; break;
             case '.':
-                printf("        Output: %c\n", *dataPointer); break;
+                //printf("     Output: %c\n", *dataPointer); break;
+                printf("%c", *dataPointer); break;
             case ',':
                 *dataPointer = getchar(); break;
             case '[':
@@ -52,19 +60,22 @@ void process() {
                 }
                 break;
             case ']':
-                if (*dataPointer != '0') {
+                if (*dataPointer != 0) {
                     // Jump back to [
                     while(*iPointer != '[')
                         iPointer--;
                 } 
-            break;
+                break;
 
-            default:
+            default: // Should never happen, has been known to happen
                 printf("\n\nDamn son, something broke. Tell me what you gone done. Here is dave: %c", dave);
                 exit(EXIT_FAILURE);
         }
         iPointer++;
-    } while (amIBothered(dave));
+        dave = *iPointer;
+    }
+    printf("Printing 100:\n");
+    print100();
     printf("That's everything, finished\n");
 }
 
