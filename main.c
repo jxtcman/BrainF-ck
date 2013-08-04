@@ -103,17 +103,19 @@ int main(void) {
             data[i] = (unsigned char) 0, instructions[i] = (unsigned char) 0;
 
         // Get unsigned characters
+        printf(">>> ");
         unsigned char next;
         scanf("%c", &next);
-        if (next == 'G')
+        if (next == 'G' || next == EOF)
             exit(EXIT_SUCCESS);
 
-        while (next != 'G') {
-            scanf("%c", &next);
+        iPointer = instructions;
+        while (next != 'G' && next != EOF) {
             if (amIBothered(next)) {
                 *iPointer = next;
                 iPointer++;
             }
+            scanf("%c", &next);
         }
 
         iPointer = instructions;
