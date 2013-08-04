@@ -25,6 +25,7 @@ bool amIBothered (unsigned char dave) {
 }
 
 void print100(void) {
+    // For debug
     for (int i = 0; i < 100; i++) {
         printf("%d.", (int) data[i]);
     }
@@ -74,15 +75,15 @@ void process() {
         iPointer++;
         dave = *iPointer;
     }
-    printf("Printing 100:\n");
-    print100();
-    printf("That's everything, finished\n");
+    //printf("Printing 100:\n");
+    //print100();
+    //printf("That's everything, finished\n");
 }
 
 int main(void) {
     // Main function
     data = (unsigned char * ) malloc(CellNo * sizeof(unsigned char));
-    instructions = (unsigned char *) malloc(10000 * sizeof(unsigned char));
+    instructions = (unsigned char *) malloc(CellNo * sizeof(unsigned char));
     dataPointer = data;
     iPointer = instructions;
     if (NULL == data || NULL == instructions) {
@@ -92,26 +93,36 @@ int main(void) {
 
     printf("Grade A Potato detected, please stand by.\n");
     printf("Spoolling up potato friends\n");
-
-    for (int i = 0; i < CellNo; i++)
-        // Fill up with 0's, as in spec
-        data[i] = (unsigned char) 0;
-
+    printf("Type only the letter G to exit\n");
     printf("Please enter code now, ending in the letter G (all other letters apart from syntax will be ignored):\n");
 
-    // Get unsigned characters
-    unsigned char next;
-    while (scanf("%c", &next) & next != 'G') {
-        if (amIBothered(next)) {
-            *iPointer = next;
-            iPointer++;
+    while (1) {
+
+        for (int i = 0; i < CellNo; i++)
+            // Fill up with 0's, as in spec
+            data[i] = (unsigned char) 0, instructions[i] = (unsigned char) 0;
+
+        // Get unsigned characters
+        unsigned char next;
+        scanf("%c", &next);
+        if (next == 'G')
+            exit(EXIT_SUCCESS);
+
+        while (next != 'G') {
+            scanf("%c", &next);
+            if (amIBothered(next)) {
+                *iPointer = next;
+                iPointer++;
+            }
         }
+
+        iPointer = instructions;
+        //printf("Chunderific instructions: %s", iPointer); // For debug
+
+        process();
     }
 
-    iPointer = instructions;
-    //printf("Chunderific instructions: %s", iPointer); // For debug
-
-    process();
-    exit(0);
+    printf("Program should not have gotten this far! Please report the bug with the input you used");
+    exit(EXIT_FAILURE);
 
 }
