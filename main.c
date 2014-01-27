@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <signal.h>
 
 #define CellNo 30001
 
@@ -45,9 +46,9 @@ void process() {
             case '<':
                 dataPointer--; break;
             case '+':
-                ++ *dataPointer; break;
+                (*dataPointer)++; break;
             case '-':
-                -- *dataPointer; break;
+                (*dataPointer)--; break;
             case '.':
                 //printf("     Output: %c\n", *dataPointer); break;
                 printf("%c", *dataPointer); break;
@@ -55,9 +56,15 @@ void process() {
                 *dataPointer = getchar(); break;
             case '[':
                 if (*dataPointer == 0) {
-                    // jump to after next ]
-                    while (*iPointer != ']')
+                    // jump to after next ] that matches this [
+                    int openCount = 1;
+                    do {
                         iPointer++;
+                        if (*iPointer == '[')
+                            openCount++;
+                        else if (*iPointer == ']')
+                            openCount--;
+                    } while (*iPointer != ']' && openCount > 0);
                 }
                 break;
             case ']':
@@ -104,7 +111,7 @@ int main(void) {
 
         // Get unsigned characters
         printf(">>> ");
-        unsigned char next;
+        char next;
         scanf("%c", &next);
         if (next == 'G' || next == EOF)
             exit(EXIT_SUCCESS);
@@ -122,6 +129,7 @@ int main(void) {
         //printf("Chunderific instructions: %s", iPointer); // For debug
 
         process();
+        printf("\n");
     }
 
     printf("Program should not have gotten this far! Please report the bug with the input you used");
